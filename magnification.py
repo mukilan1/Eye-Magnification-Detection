@@ -105,7 +105,7 @@ def plot_magnification_levels():
     plt.show()
 
 if __name__ == "__main__":
-    video_path = 'v3.mp4'  # Replace with your video file path
+    video_path = 'mag.mp4'  # Replace with your video file path
     detect_pupil_and_visualize_magnification(video_path)
 
 
