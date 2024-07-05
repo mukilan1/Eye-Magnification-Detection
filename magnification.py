@@ -4,6 +4,7 @@ import numpy as np
 def detect_pupil_and_calculate_magnification(video_path):
     cap = cv2.VideoCapture(video_path)
     baseline_radius = None  # Initialize the baseline pupil size
+    magnification_levels = []  # Define the magnification_levels variable here to track levels
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -26,7 +27,7 @@ def detect_pupil_and_calculate_magnification(video_path):
         opening = cv2.morphologyEx(threshold, cv2.MORPH_OPEN, kernel, iterations=1)
         closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel, iterations=1)
 
-        # Detect blobs.
+        # Detect blobs (pupil candidates)
         contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         if contours:
@@ -38,17 +39,21 @@ def detect_pupil_and_calculate_magnification(video_path):
                 radius = int(radius)
                 if radius > 5:  # Minimum size filter to reduce noise
                     if baseline_radius is None:
-                        baseline_radius = radius  # Set baseline radius
+                        baseline_radius = radius  # Set baseline radius for the first detected pupil size
 
                     magnification = radius / baseline_radius if baseline_radius else 1
+                    magnification_levels.append(magnification)
+
+                    # Print the magnification level to the terminal
+                    print(f"Detected Magnification: {magnification:.2f}x")
 
                     # Draw the circle and radius
                     cv2.circle(frame, center, radius, (255, 0, 0), 2)
                     cv2.circle(frame, center, 2, (0, 255, 0), -1)
 
-                    # Display the magnification level
+                    # Display the magnification level on the frame
                     cv2.putText(frame, f"Magnification: {magnification:.2f}x", (center[0] - 50, center[1] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-                    break  # Process only the largest contour as the pupil
+                    break  # Focus on the largest contour only
 
         # Draw the magnification levels graph
         draw_magnification_graph(frame, magnification_levels)
@@ -78,8 +83,6 @@ def draw_magnification_graph(frame, magnification_levels):
         cv2.line(graph, (x, graph_height), (x, y), (0, 255, 0), 1)
 
     frame[-graph_height:, :] = graph
-
-magnification_levels = []  # Define the magnification_levels variable
 
 if __name__ == "__main__":
     video_path = 'v2.mp4'  # Ensure the path is correct
