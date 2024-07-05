@@ -23,3 +23,7 @@ This project uses MediaPipe and OpenCV to detect and analyze eye magnification i
    ```bash
    git clone https://github.com/mukilan1/Eye-Magnification-Detection.git
    cd eye-magnification-detection
+
+![image](https://github.com/mukilan1/Eye-Magnification-Detection/assets/74693526/0b2fd840-b263-4d4e-9dae-a993dc4e1596)
+
+![image](https://github.com/mukilan1/Eye-Magnification-Detection/assets/74693526/019afa7e-2075-4c50-87d7-b44c12f6114e)
